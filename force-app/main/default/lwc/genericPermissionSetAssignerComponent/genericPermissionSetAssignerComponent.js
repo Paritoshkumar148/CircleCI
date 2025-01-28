@@ -272,11 +272,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
   handlePermissionAssignmentError(error) {
     this.showToast("Failed to Assign Permission Set ",`${error.body.message}`,"error");
   }
-  refreshComponentAfterDelay() {
-    const RELOAD_DELAY = 3000;
-    this.isLoaded = false;
-    setTimeout(() => {window.location.reload(); }, RELOAD_DELAY);
-  }
+ 
   showToast(title, message, variant) {
     if (!import.meta.env.SSR) {
       this.dispatchEvent(new ShowToastEvent({ message, title, variant }));
