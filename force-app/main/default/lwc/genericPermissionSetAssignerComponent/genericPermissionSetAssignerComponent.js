@@ -250,7 +250,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
       .then((result) => {
         this.result = result;
         this.showToast( "Success!", "Permissions have been successfully assigned.", "success");
-        window.location.reload(); })
+       window.location.reload(); })
       .catch((error) => {
         this.handlePermissionAssignmentError(error);
       });
