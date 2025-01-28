@@ -148,7 +148,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
     } else if (ActiveSections.includes("UpgradePermission")) {
       this.setUpgradePermissionState();
     } else if (ActiveSections.includes("ClonePermission")) {
-      this.setClonePermissionState();
+      this.setClonePermissionState(); 
     }
   }
   setCustomPermissionState() {
