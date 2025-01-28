@@ -20,7 +20,7 @@ public with sharing class GenericPermissionSetsAssignerHelper {
         Id sourceUserId,
         Id targetUserId
     ) {
-        Schema.SObjectType objType = Schema.getGlobalDescribe().get('PermissionSetAssignment');
+        Schema.SObjectType objType =  PermissionSetAssignment.SObjectType;
         Schema.DescribeSObjectResult objDescribe = objType.getDescribe();
         List<PermissionSetAssignment> psaListToBeInserted = new List<PermissionSetAssignment>();
         List<PermissionSet> assignedPSSource = [SELECT Id
@@ -71,7 +71,7 @@ public with sharing class GenericPermissionSetsAssignerHelper {
         Id targetUserId,
         String upgradeTarget
     ) {
-        Schema.SObjectType objType = Schema.getGlobalDescribe().get('PermissionSetAssignment');
+        Schema.SObjectType objType =  PermissionSetAssignment.SObjectType;
         Schema.DescribeSObjectResult objDescribe = objType.getDescribe();
         Map<String, Boolean> upgradeTargetPermission = (Map<String, Boolean>) JSON.deserialize(upgradeTarget, Map<String, Boolean>.class);
         List<PermissionSetAssignment> psaNeedToBeUpgratedForTargetUser = new List<PermissionSetAssignment>();
@@ -138,7 +138,7 @@ public with sharing class GenericPermissionSetsAssignerHelper {
         Id sourceUserId,
         Id targetUserId
     ) {
-        Schema.SObjectType objType = Schema.getGlobalDescribe().get('PermissionSetAssignment');
+        Schema.SObjectType objType =  PermissionSetAssignment.SObjectType;
         Schema.DescribeSObjectResult objDescribe = objType.getDescribe();
         Map<String, Boolean> cloneTargetPermission = (Map<String, Boolean>) JSON.deserialize(cloneTarget, Map<String, Boolean>.class);
         String standardPSAssignToUser = 'X00%';
