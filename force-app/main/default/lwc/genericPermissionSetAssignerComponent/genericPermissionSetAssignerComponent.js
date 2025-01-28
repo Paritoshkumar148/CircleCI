@@ -231,7 +231,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
               this.showToast("Error", message, "error");
             } else if (message.startsWith("Upgrade Action Failed")) {
               this.showToast("Warning", message, "Warning");
-              this.refreshComponentAfterDelay();
+              window.location.reload();
             } else if (message.startsWith("No Changes")) {
               this.showToast("Warning", message, "warning");
             }
