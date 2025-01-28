@@ -215,10 +215,9 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
       .then((result) => {
         this.result = result;
         this.showToast("Success!","Permissions have been successfully assigned.","success");
-        this.refreshComponentAfterDelay();})
+        window.location.reload();})
       .catch((error) => {
         this.handlePermissionAssignmentError(error);
-        this.refreshComponentAfterDelay();
       });
   }
   // Upgrade selected Permission Sets for Target User.
@@ -230,22 +229,19 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
           result.forEach((message) => {
             if (message.startsWith("Something went wrong")) {
               this.showToast("Error", message, "error");
-              this.refreshComponentAfterDelay();
             } else if (message.startsWith("Upgrade Action Failed")) {
               this.showToast("Warning", message, "Warning");
               this.refreshComponentAfterDelay();
             } else if (message.startsWith("No Changes")) {
               this.showToast("Warning", message, "warning");
-              this.refreshComponentAfterDelay();
             }
           });
         } else {
           this.showToast( "Success!", "Permissions have been successfully assigned.","success");
-          this.refreshComponentAfterDelay(); }
+          window.location.reload();}
         })
       .catch((error) => {
         this.handlePermissionAssignmentError(error);
-        this.refreshComponentAfterDelay();
       });
   }
   // Clone selected permission Sets for Target User.
@@ -254,10 +250,9 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
       .then((result) => {
         this.result = result;
         this.showToast( "Success!", "Permissions have been successfully assigned.", "success");
-        this.refreshComponentAfterDelay(); })
+        window.location.reload(); })
       .catch((error) => {
         this.handlePermissionAssignmentError(error);
-        this.refreshComponentAfterDelay();
       });
   }
   // Show validation error messages
@@ -278,7 +273,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
     this.showToast("Failed to Assign Permission Set ",`${error.body.message}`,"error");
   }
   refreshComponentAfterDelay() {
-    const RELOAD_DELAY = 1000;
+    const RELOAD_DELAY = 3000;
     this.isLoaded = false;
     setTimeout(() => {window.location.reload(); }, RELOAD_DELAY);
   }
