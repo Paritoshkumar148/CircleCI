@@ -1,0 +1,27 @@
+.errorScreen{
+    color: red;
+    margin-bottom: 1rem;
+    font-size: large;
+    font-weight: 500;
+}
+
+.customHeading{
+    color: darkslategrey; 
+    font-size: medium; 
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.pageHeading{
+    font-size: x-large;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.pageDivider{
+    border-bottom: 2px solid grey;
+}
+
+.mainBox{
+    margin-top : 1 rem !important;
+}
