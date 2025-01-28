@@ -33,15 +33,14 @@ public with sharing class GenericPermissionSetsAssignerHelper {
                                                                   AND (NOT PermissionSet.Name LIKE :standardPSAssignToUser) WITH SECURITY_ENFORCED
                                                                  ];
         if (permissionSetAssignments.size() > 0) {
-            if(objDescribe.isDeletable()){
-                 try {
-                    delete permissionSetAssignments;
+                try {
+                     if(objDescribe.isDeletable()){
+                        delete permissionSetAssignments;
+                     }
                 } catch (Exception e) { 
                     throw new AuraHandledException('Something went wrong :' + e.getMessage());
                 }   
-            }else{
-                 throw new AuraHandledException('Custom Action Failed: "You lack permissions to remove any existing Permission Sets. Please contact your system administrator."');
-            }
+            
         }
         
         for (Id psId : customPSSelected) {
@@ -150,16 +149,13 @@ public with sharing class GenericPermissionSetsAssignerHelper {
                                                                        AND (NOT PermissionSet.Name LIKE :standardPSAssignToUser) WITH SECURITY_ENFORCED
                                                                       ];
         if (targetUserAssignedPermissions.size() > 0) {
-        if(objDescribe.isDeletable()){
             try {
-                    delete targetUserAssignedPermissions;
+                    if(objDescribe.isDeletable()){
+                       delete targetUserAssignedPermissions;
+                    }
                 } catch (Exception e) { 
                     throw new AuraHandledException('Something went wrong: ' + e.getMessage());
-                }
-        }else{
-                throw new AuraHandledException('Clone Action Failed: "You lack permissions to remove existing Assigned Permission Sets. Please contact your system administrator."');
-        }
-           
+                } 
         }
         
         if (cloneTargetPermission.size() > 0) {

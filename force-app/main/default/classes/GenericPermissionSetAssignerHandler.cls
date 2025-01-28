@@ -37,7 +37,8 @@ public with sharing class GenericPermissionSetAssignerHandler {
             FROM PermissionSetAssignment 
             GROUP BY AssigneeId 
             HAVING COUNT(Id) > 1
-        ]) {
+            LIMIT 2000
+            ]) {
             userPermissionSetCount.put((Id) result.get('AssigneeId'), (Integer) result.get('permissionCount'));
         }
         
