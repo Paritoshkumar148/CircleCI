@@ -2,7 +2,7 @@
 * @description       : 
 * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
 * @group             : 
-* @last modified on  : 01-28-2025
+* @last modified on  : 01-29-2025
 * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 **/
 
@@ -25,17 +25,18 @@ public with sharing class GenericPermissionSetsAssignerHelper {
         List<PermissionSetAssignment> psaListToBeInserted = new List<PermissionSetAssignment>();
         List<PermissionSet> assignedPSSource = [SELECT Id
                                                 FROM PermissionSet 
-                                                WHERE Id IN :customPSSelected WITH SECURITY_ENFORCED];
+                                                WHERE Id IN :customPSSelected WITH SECURITY_ENFORCED
+                                                ];
         String standardPSAssignToUser = 'X00%';                                       
         List<PermissionSetAssignment> permissionSetAssignments = [SELECT Id
                                                                   FROM PermissionSetAssignment
                                                                   WHERE AssigneeId = :targetUserId
                                                                   AND (NOT PermissionSet.Name LIKE :standardPSAssignToUser) WITH SECURITY_ENFORCED
-                                                                 ];
+                                                                  ];
         if (permissionSetAssignments.size() > 0) {
                 try {
                      if(objDescribe.isDeletable()){
-                        delete permissionSetAssignments;
+                         Database.delete( permissionSetAssignments, AccessLevel.USER_MODE );
                      }
                 } catch (Exception e) { 
                     throw new AuraHandledException('Something went wrong :' + e.getMessage());
@@ -50,10 +51,12 @@ public with sharing class GenericPermissionSetsAssignerHelper {
             ));
         }
         if (psaListToBeInserted.size() > 0) {
-            try {
-                    insert psaListToBeInserted;
+            try { 
+                    if(objDescribe.isDeletable()){
+                       Database.insert(psaListToBeInserted, AccessLevel.USER_MODE);
+                    }
                 } catch (Exception e) {
-                    throw new AuraHandledException('Something went wrong: ' + e.getMessage());
+                    throw new AuraHandledException(e.getMessage());
                 }     
         } else {    
             throw new AuraHandledException('Custom Action Failed: "Selected permission sets have not assigned to Target Use"');
@@ -112,19 +115,17 @@ public with sharing class GenericPermissionSetsAssignerHelper {
         }
         
         if (psaNeedToBeUpgratedForTargetUser.size() > 0) {
-            if( objDescribe.isCreateable()){
                  try {
-                    insert psaNeedToBeUpgratedForTargetUser;
+                         if(objDescribe.isCreateable()){
+                              Database.insert( psaNeedToBeUpgratedForTargetUser, AccessLevel.USER_MODE );
+                         }  
                 } catch (Exception e) {
                     resultMessages.add('Something went wrong: ' + e.getMessage());
                 }   
-            }else{
-                resultMessages.add('Upgrade Action Failed: "You lack permissions to Manage Users. Please contact your system administrator."');
-            }  
         } else {
-            resultMessages.add('No Changes: Selected permission set is already assigned to Target User.');
+            resultMessages.add('No Changes: Selected Permission Sets is already assigned to Target User.');
         }
-        
+   
         return resultMessages;
     }
     /**
@@ -151,10 +152,10 @@ public with sharing class GenericPermissionSetsAssignerHelper {
         if (targetUserAssignedPermissions.size() > 0) {
             try {
                     if(objDescribe.isDeletable()){
-                       delete targetUserAssignedPermissions;
+                       Database.delete( targetUserAssignedPermissions, AccessLevel.USER_MODE );
                     }
                 } catch (Exception e) { 
-                    throw new AuraHandledException('Something went wrong: ' + e.getMessage());
+                    throw new AuraHandledException(e.getMessage());
                 } 
         }
         
@@ -180,14 +181,16 @@ public with sharing class GenericPermissionSetsAssignerHelper {
             }
         }
         
-        if (psaNeedToBeClonedForTargetUser.size() > 0 && objDescribe.isCreateable()) {
+        if (psaNeedToBeClonedForTargetUser.size() > 0) {
             try {
-                insert psaNeedToBeClonedForTargetUser;
+                if(objDescribe.isCreateable()){
+                  Database.insert( psaNeedToBeClonedForTargetUser, AccessLevel.USER_MODE );
+                }
             } catch (Exception e) {
-                throw new AuraHandledException('Something went wrong :' + e.getMessage());
+                throw new AuraHandledException(e.getMessage());
             }
         } else {
-            throw new AuraHandledException('Clone Action Failed: "You lack permissions to Manage Users. Please contact your system administrator."');
+            throw new AuraHandledException('Clone Action Failed: "No available Permission Sets found to assign to the Target User."');
         }
-    }
+    } 
 }
