@@ -150,5 +150,5 @@ public with sharing class GenericPermissionSetAssignerHandler {
       GenericPermissionSetsAssignerHelper.clonePermissionSetOfTargetUser(cloneTarget, 
                                                                          sourceUserId, 
                                                                          targetUserId);
-    }     
+    }   
 }

@@ -192,5 +192,5 @@ public with sharing class GenericPermissionSetsAssignerHelper {
         } else {
             throw new AuraHandledException('Clone Action Failed: "No available Permission Sets found to assign to the Target User."');
         }
-    } 
+    }
 }

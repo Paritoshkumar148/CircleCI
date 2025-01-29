@@ -20,7 +20,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
   @track upgradePermission = false;
   @track clonePermission = false;
   @track customPermission = false;
-  @track sourceUserId; 
+  @track sourceUserId;
   @track targetUserId;
   @track showContent = false;
   storeselectedDualPermissionSet = [];
