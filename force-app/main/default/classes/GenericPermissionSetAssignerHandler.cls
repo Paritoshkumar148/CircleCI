@@ -2,7 +2,7 @@
 * @description       : 
 * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
 * @group             : 
-* @last modified on  : 01-10-2025
+* @last modified on  : 01-29-2025
 * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 **/
 @SuppressWarnings('PMD')
@@ -150,6 +150,5 @@ public with sharing class GenericPermissionSetAssignerHandler {
       GenericPermissionSetsAssignerHelper.clonePermissionSetOfTargetUser(cloneTarget, 
                                                                          sourceUserId, 
                                                                          targetUserId);
-    }  
-    
+    }   
 }

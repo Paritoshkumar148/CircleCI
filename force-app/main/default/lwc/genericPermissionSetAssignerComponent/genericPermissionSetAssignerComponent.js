@@ -37,11 +37,11 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
         if (this.isUserObjAccessible) {
           this.loadSourceUsers();
         } else {
-          this.showToast( "Insufficient Access", `Contact your system administrator: You do not have permission to manage users.`, "Error");
+          this.showToast( "Access Denied: ", `You lack the necessary permissions to assign Permission Sets. Please contact your system administrator for assistance.`, "Error");
         }
       })
       .catch((error) => {
-        this.showToast("Insufficient Access",`Contact your system administrator: ${error.body.message}`,"Error" );
+        this.showToast("Insufficient Access: ",`${error.body.message}`,"Error" );
       })
       .finally(() => {
         this.isLoaded = true;
@@ -59,7 +59,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
         this.optionsForSource = allUsers;
       })
       .catch((error) => {
-        this.showToast("No user exists in this org.",`Error Fetching Source User: ${error.body.message}`, "Error");
+        this.showToast("No user exists in this org: ",` ${error.body.message}`, "Error");
       });
   }
   handleSourceChange(event) {
@@ -88,9 +88,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
       this.dualListboxOptions = allSourcePermissionSet;
       this.sourceUserAssignPS = allSourcePermissionSet;
     } else if (error) {
-      this.showToast("Error retriving the source sser permission set.", ` ${error.body.message}`,"Error");
-    } else {
-      this.showToast("Error retriving the source user permission set.", "Error while fetching the source user permission set.","Error");
+      this.showToast("Error retriving the Source User Permission Sets: ", ` ${error.body.message}`,"Error");
     }
   }
 
@@ -104,9 +102,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
       });
       this.optionsForTarget = allUsers;
     } else if (error) {
-      this.showToast("Error retriving target user.", `${error.body.message}`, "Error");
-    } else {
-      this.showToast("Error retriving target user.", "Error fetching target User.", "Error");
+      this.showToast("Error retriving Target User: ", `${error.body.message}`, "Error");
     }
   }
   handleTargetChange(event) {
@@ -134,10 +130,8 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
       this.targetUserAssignPS = allTargetPermissionSet;
       this.storeselectedDualPermissionSet = this.selectedDualPermissionSet;
     } else if (error) {
-      this.showToast("Error retrieving the target user permission set.",`${error.body.message}`,"Error");
-    } else {
-      this.showToast("Error retrieving the target user permission set.","Error while fetching the target user permission set.","Error");
-    }
+      this.showToast("Error retrieving the Target User Permission Sets: ",`${error.body.message}`,"Error");
+    } 
   }
 
   //Handling active section is Custom/Upgrade/Clone section is open
@@ -214,7 +208,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
     assignCustomPermissionSetsToTargetUser({customPSSelected: this.selectedDualPermissionSet, sourceUserId: this.sourceUserId,targetUserId: this.targetUserId})
       .then((result) => {
         this.result = result;
-        this.showToast("Success!","Permissions have been successfully assigned.","success");
+        this.showToast("Success!","Permissions have been successfully assigned to Target User.","success");
         window.location.reload();})
       .catch((error) => {
         this.handlePermissionAssignmentError(error);
@@ -237,7 +231,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
             }
           });
         } else {
-          this.showToast( "Success!", "Permissions have been successfully assigned.","success");
+          this.showToast( "Success!", "Permissions have been successfully assigned to Target User.","success");
           window.location.reload();}
         })
       .catch((error) => {
@@ -249,7 +243,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
     clonePermissionSetOfTargetUser({cloneTarget: JSON.stringify(this.targetClonePermissions), sourceUserId: this.sourceUserId, targetUserId: this.targetUserId})
       .then((result) => {
         this.result = result;
-        this.showToast( "Success!", "Permissions have been successfully assigned.", "success");
+        this.showToast( "Success!", "Permissions have been successfully assigned to Target User.", "success");
         window.location.reload(); })
       .catch((error) => {
         this.handlePermissionAssignmentError(error);
@@ -258,25 +252,21 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
   // Show validation error messages
   showValidationErrors() {
     if (this.sourceUserId && !this.targetUserId) {
-      this.showToast("Target User is not selected", "Please select a target user to proceed.", "error");
+      this.showToast("Target User is not selected: ", "Please select a Target User to proceed.", "error");
     } else if (!this.sourceUserId && this.targetUserId) {
-      this.showToast("Source User Is not selected", "Please select a source user to proceed", "error");
+      this.showToast("Source User Is not selected: ", "Please select a Source User to proceed", "error");
     } else if (!this.sourceUserId && !this.targetUserId) {
-      this.showToast("Source User and Target User has not been selected", "Please select both source and target users to continue.", "error");
+      this.showToast("Source User and Target User has not been selected: ", "Please select both Source and Target Users to continue.", "error");
     } else if (!this.upgradePermission && !this.clonePermission && !this.customPermission) {
-      this.showToast("Permission type not selected", " Please choose Custom, Upgrade, or Clone to proceed.", "error");
+      this.showToast("Permission type is not selected: ", " Please choose Custom, Upgrade, or Clone to proceed.", "error");
     } else {
-      this.showToast("No permission sets have been selected.", "Please select at least one permission set to assign to the target user.","error");
+      this.showToast("No Permission Sets have been selected: ", "Please select Permission Sets to assign to the Target User.","error");
     }
   }
   handlePermissionAssignmentError(error) {
-    this.showToast("Failed to Assign Permission Set ",`${error.body.message}`,"error");
+    this.showToast("Failed to Assign Permission Set: ",`${error.body.message}`,"error");
   }
-  refreshComponentAfterDelay() {
-    const RELOAD_DELAY = 3000;
-    this.isLoaded = false;
-    setTimeout(() => {window.location.reload(); }, RELOAD_DELAY);
-  }
+ 
   showToast(title, message, variant) {
     if (!import.meta.env.SSR) {
       this.dispatchEvent(new ShowToastEvent({ message, title, variant }));

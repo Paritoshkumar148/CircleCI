@@ -3,7 +3,7 @@
     margin-bottom: 1rem;
     font-size: large;
     font-weight: 500;
-}
+} 
 
 .customHeading{
     color: darkslategrey; 
@@ -14,7 +14,8 @@
 
 .pageHeading{
     font-size: x-large;
-    font-weight: 500;
+    font-weight: 600;
+    color: #13385c; 
     margin-bottom: 1rem;
 }
 
