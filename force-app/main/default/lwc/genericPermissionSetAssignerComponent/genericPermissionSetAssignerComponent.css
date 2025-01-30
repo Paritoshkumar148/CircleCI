@@ -26,3 +26,8 @@
 .mainBox{
     margin-top : 1 rem !important;
 }
+.helptext{
+    font-weight: bold; 
+    padding-bottom: 10px; 
+    padding-top: 10px;
+}

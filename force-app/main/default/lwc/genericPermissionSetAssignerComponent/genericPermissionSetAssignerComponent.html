@@ -2,15 +2,15 @@
   @description       : 
   @author            : ChangeMeIn@UserSettingsUnder.SFDoc
   @group             : 
-  @last modified on  : 01-29-2025
+  @last modified on  : 01-30-2025
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
-    <template if:false={isLoaded}>
+    <template if:false={componentAccessibleForUser}>
       <lightning-spinner alternative-text="Loading..."></lightning-spinner>
     </template>
   
-    <template if:true={isLoaded}>
+    <template if:true={componentAccessibleForUser}>
       <template if:false={isUserObjAccessible}>
         <lightning-card
           style="font-weight: 100"
@@ -28,10 +28,11 @@
   
       <template if:true={isUserObjAccessible}>
         <lightning-card>
+
           <div class="slds-align_absolute-center pageDivider">
             <span class="pageHeading">Generic Permission Sets Assigner</span>
           </div>
-          <br />
+          <br/>
   
           <!--Source & Target Users-->
           <div class="mainBox">
@@ -71,6 +72,7 @@
               style="font-weight: bold"
               name="CustomPermission"
             >
+            <div class="helptext">
               <span style="font-weight: 150; padding-left: 25px"
                 >Custom Permission Sets Functionality:</span
               >
@@ -78,6 +80,7 @@
                 content="The Permission Sets selected in the Target User Permission Sets box will be assigned to the Target User, replacing their existing ones. If the Source User box is empty, it means the Target User already has all the Permission Sets assigned to the Source User."
               >
               </lightning-helptext>
+            </div>
               <template if:true={customPermission}>
                 <template if:true={showContent}>
                   <div style="font-weight: normal">
@@ -86,20 +89,23 @@
                         <template if:true={targetUserId}>
                           <div
                             class="slds-col slds-p-horizontal_medium"
-                            style="margin-left: 25px"
+                            style="margin-left: 10px"
                           >
+                          <template if:false={isLoaded}>
+                            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                          </template>
                             <!-- Dual Listbox for Permission Sets -->
-                            <lightning-dual-listbox
-                              name="userPermissionSets"
-                              source-label="Source User Permission Sets"
-                              selected-label="Selected + Assigned Target User Permission Sets"
-                              options={dualListboxOptions}
-                              value={selectedDualPermissionSet}
-                              onchange={handleChangePSForCustomFunctionality}
-                              style="font-size: Samll"
-                              size="4"
-                            >
-                            </lightning-dual-listbox>
+                              <lightning-dual-listbox
+                                name="userPermissionSets"
+                                source-label="Source User Permission Sets"
+                                selected-label="Selected + Assigned Target User Permission Sets"
+                                options={dualListboxOptions}
+                                value={selectedDualPermissionSet}
+                                onchange={handleChangePSForCustomFunctionality}
+                                style="font-size: Small"
+                                size="4"
+                              >
+                              </lightning-dual-listbox> 
                           </div>
                         </template>
                       </template>
@@ -115,13 +121,14 @@
               style="font-weight: bold"
               name="UpgradePermission"
             >
+            <div class="helptext">
               <span style="font-weight: 150; padding-left: 25px"
                 >Upgrade Permission Sets Functionality:</span
               >
               <lightning-helptext
                 content="It assigns selected permission sets from a source user to a target user while keeping the target user's existing permissions unchanged. It ensures no duplicates and only adds the specified permission sets."
-              >
-              </lightning-helptext>
+              ></lightning-helptext>
+            </div>
   
               <template if:true={upgradePermission}>
                 <template if:true={showContent}>
@@ -139,21 +146,25 @@
                       style="margin-left: 15px"
                     >
                       <h1 class="customHeading">Source User Permission Sets</h1>
-                      <template
-                        for:each={sourceUserAssignPS}
-                        for:item="permissionSet"
-                      >
-                        <div key={permissionSet.value}>
-                          <lightning-input
-                            style="font-weight: normal; padding-bottom: 1%"
-                            type="checkbox"
-                            label={permissionSet.label}
-                            data-id={permissionSet.value}
-                            onchange={handlePermissionSetChangeUpgradeSource}
-                          >
-                          </lightning-input>
-                        </div>
+                      <template if:false={isLoaded}>
+                        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
                       </template>
+                      
+                        <template
+                          for:each={sourceUserAssignPS}
+                          for:item="permissionSet"
+                        >
+                          <div key={permissionSet.value}>
+                            <lightning-input
+                              style="font-weight: normal; padding-bottom: 1%"
+                              type="checkbox"
+                              label={permissionSet.label}
+                              data-id={permissionSet.value}
+                              onchange={handlePermissionSetChangeUpgradeSource}
+                            >
+                            </lightning-input>
+                          </div>
+                        </template>
                     </div>
                   </div>
                 </template>
@@ -166,13 +177,13 @@
               style="font-weight: bold"
               name="ClonePermission"
             >
+            <div class="helptext">
               <span style="font-weight: 150; padding-left: 25px"
-                >Clone Permission Sets Functionality:</span
-              >
+                >Clone Permission Sets Functionality:
+              </span>
               <lightning-helptext
                 content="It replaces the target user's permissions with the selected permission sets from the source user. Any existing permissions on the target user will be removed and fully overwritten with the new ones."
-              >
-              </lightning-helptext>
+              ></lightning-helptext></div>
   
               <template if:true={clonePermission}>
                 <template if:true={showContent}>
@@ -190,6 +201,9 @@
                       style="margin-left: 15px"
                     >
                       <h1 class="customHeading">Source User Permission Sets</h1>
+                      <template if:false={isLoaded}>
+                        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                      </template>
                       <template
                         for:each={sourceUserAssignPS}
                         for:item="permissionSet"
@@ -233,6 +247,11 @@
               onclick={handleSave}
             >
             </lightning-button>
+
+            <template if:false={isLoadedResultAfterSave}>
+              <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+
           </div>
         </lightning-card>
       </template>
