@@ -27,7 +27,9 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
   targetUpgradePermissions = new Map();
   targetClonePermissions = new Map();
   isUserObjAccessible = false;
+  componentAccessibleForUser = false;
   isLoaded = false;
+  isLoadedResultAfterSave = true;
   result;
   //Functionality of checkUserObjectAccessibility Method to check is user is having accessibility of Manage Users.
   checkUserObjectAccessibility() {
@@ -44,7 +46,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
         this.showToast("Insufficient Access: ",`${error.body.message}`,"Error" );
       })
       .finally(() => {
-        this.isLoaded = true;
+        this.componentAccessibleForUser = true;
       });
   }
 
@@ -77,6 +79,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
   //Retriving Assigned Permission Sets of selected Source User.
   @wire(getSourcePermissionSet, { sourceUser: "$sourceUserId" })
   SourceUserAssignedPS({ error, data }) {
+    this.isLoaded = false;
     if (data) {
       const allSourcePermissionSet = [];
       data.forEach((PermissionSetAssignment) => {
@@ -129,6 +132,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
       );
       this.targetUserAssignPS = allTargetPermissionSet;
       this.storeselectedDualPermissionSet = this.selectedDualPermissionSet;
+      this.isLoaded= true;
     } else if (error) {
       this.showToast("Error retrieving the Target User Permission Sets: ",`${error.body.message}`,"Error");
     } 
@@ -151,10 +155,12 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
     this.resetPermissions(["upgrade", "clone"]);
   }
   setUpgradePermissionState() {
+    this.isLoaded = true;
     this.upgradePermission = true;
     this.resetPermissions(["custom", "clone"]);
   }
   setClonePermissionState() {
+    this.isLoaded = true;
     this.clonePermission = true;
     this.resetPermissions(["custom", "upgrade"]);
   }
@@ -186,6 +192,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
 
   handleSave() {
     if (this.isValidInputs()) {
+      this.isLoadedResultAfterSave = false;
       if (this.customPermission) {
         this.assignCustomPermissions();
       } else if (this.upgradePermission) {
@@ -194,6 +201,7 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
         this.clonePermissions();
       }
     } else {
+      this.isLoadedResultAfterSave = false;
       this.showValidationErrors();
     }
   }
@@ -264,11 +272,13 @@ export default class GenericPermissionSetAssignerComponent extends LightningElem
     }
   }
   handlePermissionAssignmentError(error) {
+    this.isLoadedResultAfterSave = true;
     this.showToast("Failed to Assign Permission Set: ",`${error.body.message}`,"error");
   }
  
   showToast(title, message, variant) {
     if (!import.meta.env.SSR) {
+      this.isLoadedResultAfterSave = true;
       this.dispatchEvent(new ShowToastEvent({ message, title, variant }));
     }
   }
